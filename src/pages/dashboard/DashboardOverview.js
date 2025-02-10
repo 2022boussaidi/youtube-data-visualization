@@ -13,9 +13,7 @@ export default () => {
     <>
       <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-4">
         <Dropdown className="btn-toolbar">
-          <Dropdown.Toggle as={Button} variant="primary" size="sm" className="me-2">
-            <FontAwesomeIcon icon={faPlus} className="me-2" />New Task
-          </Dropdown.Toggle>
+          
           <Dropdown.Menu className="dashboard-dropdown dropdown-menu-left mt-2">
             <Dropdown.Item className="fw-bold">
               <FontAwesomeIcon icon={faTasks} className="me-2" /> New Task
@@ -42,20 +40,7 @@ export default () => {
       </div>
 
       <Row className="justify-content-md-center">
-        <Col xs={12} className="mb-4 d-none d-sm-block">
-          <SalesValueWidget
-            title="Sales Value"
-            value="10,567"
-            percentage={10.57}
-          />
-        </Col>
-        <Col xs={12} className="mb-4 d-sm-none">
-          <SalesValueWidgetPhone
-            title="Sales Value"
-            value="10,567"
-            percentage={10.57}
-          />
-        </Col>
+        
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
             category="Customers"
@@ -83,6 +68,21 @@ export default () => {
             title="Traffic Share"
             data={trafficShares} />
         </Col>
+        <Col xs={12} className="mb-4 d-none d-sm-block">
+          <SalesValueWidget
+            title="Sales Value"
+            value="10,567"
+            percentage={10.57}
+          />
+        </Col>
+        <Col xs={12} className="mb-4 d-sm-none">
+          <SalesValueWidgetPhone
+            title="Sales Value"
+            value="10,567"
+            percentage={10.57}
+          />
+        </Col>
+
       </Row>
 
       <Row>
