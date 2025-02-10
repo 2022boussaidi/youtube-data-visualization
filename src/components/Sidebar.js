@@ -98,16 +98,20 @@ export default (props = {}) => {
             </div>
             <Nav className="flex-column pt-3 pt-md-0">
               <NavItem title="Dashboard" link={Routes.Presentation.path} icon={faBoxOpen} />
+              <Dropdown.Divider className="my-2 border-indigo" />
+              <NavItem title="Overview Metrics" link={Routes.DashboardOverview.path} icon={faChartPie} />
+              <Dropdown.Divider className="my-3 border-indigo" />
+              <NavItem title="Main Visualization " icon={faCog} link={Routes.Settings.path} />
+              <Dropdown.Divider className="my-3 border-indigo" />
+              <NavItem title="Comment List" icon={faHandHoldingUsd} link={Routes.Transactions.path} />
+              <Dropdown.Divider className="my-3 border-indigo" />
 
-              <NavItem title="Overview" link={Routes.DashboardOverview.path} icon={faChartPie} />
-              <NavItem title="Transactions" icon={faHandHoldingUsd} link={Routes.Transactions.path} />
-              <NavItem title="Settings" icon={faCog} link={Routes.Settings.path} />
-
-              <CollapsableNavItem eventKey="tables/" title="Tables" icon={faTable}>
+              <CollapsableNavItem eventKey="tables/" title="Word Cloud Section" icon={faTable}>
                 <NavItem title="Bootstrap Table" link={Routes.BootstrapTables.path} />
               </CollapsableNavItem>
+              <Dropdown.Divider className="my-3 border-indigo" />
 
-              <CollapsableNavItem eventKey="examples/" title="Page Examples" icon={faFileAlt}>
+              <CollapsableNavItem eventKey="examples/" title="Model" icon={faFileAlt}>
                 <NavItem title="Sign In" link={Routes.Signin.path} />
                 <NavItem title="Sign Up" link={Routes.Signup.path} />
                 <NavItem title="Forgot password" link={Routes.ForgotPassword.path} />
@@ -149,7 +153,7 @@ export default (props = {}) => {
                 <NavItem title="Tooltips" link={Routes.Tooltips.path} />
   </CollapsableNavItem>*/}
               <NavItem external title="Github" link="https://github.com/2022boussaidi" target="_blank" image={ThemesbergLogo} />
-              <Button as={Link} to={Routes.Upgrade.path} variant="secondary" className="upgrade-to-pro"><FontAwesomeIcon icon={faRocket} className="me-1" /> Upgrade to Pro</Button>
+              <Button as={Link} to={Routes.Upgrade.path} variant="secondary" className="upgrade-to-pro"><FontAwesomeIcon icon={faRocket} className="me-1" />  youtube video here</Button>
             </Nav>
           </div>
         </SimpleBar>
