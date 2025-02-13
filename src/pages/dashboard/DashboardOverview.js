@@ -1,12 +1,13 @@
 
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCashRegister, faChartLine, faCloudUploadAlt, faPlus, faRocket, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faCashRegister, faChartLine, faCloudUploadAlt, faDatabase, faEye, faPlus, faRocket, faStoreAlt, faTasks, faUserShield } from '@fortawesome/free-solid-svg-icons';
 import { Col, Row, Button, Dropdown, ButtonGroup } from '@themesberg/react-bootstrap';
 
 import { CounterWidget, CircleChartWidget, BarChartWidget, TeamMembersWidget, ProgressTrackWidget, RankingWidget, SalesValueWidget, SalesValueWidgetPhone, AcquisitionWidget } from "../../components/Widgets";
 import { PageVisitsTable } from "../../components/Tables";
 import { trafficShares, totalOrders } from "../../data/charts";
+import { BarChart } from "../../components/Charts";
 
 export default () => {
   return (
@@ -43,10 +44,9 @@ export default () => {
         
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Customers"
+            category="Comments "
             title="345k"
             period="Feb 1 - Apr 1"
-            percentage={18.2}
             icon={faChartLine}
             iconColor="shape-secondary"
           />
@@ -54,20 +54,23 @@ export default () => {
 
         <Col xs={12} sm={6} xl={4} className="mb-4">
           <CounterWidget
-            category="Revenue"
+            category="Views"
             title="$43,594"
             period="Feb 1 - Apr 1"
-            percentage={28.4}
-            icon={faCashRegister}
+            icon={faEye}
+            iconColor="shape-tertiary"
+          />
+        </Col>
+        <Col xs={12} sm={6} xl={4} className="mb-4">
+          <CounterWidget
+            category="Months"
+            title="$43,594"
+            icon={faCalendar}
             iconColor="shape-tertiary"
           />
         </Col>
 
-        <Col xs={12} sm={6} xl={4} className="mb-4">
-          <CircleChartWidget
-            title="Traffic Share"
-            data={trafficShares} />
-        </Col>
+        
         <Col xs={12} className="mb-4 d-none d-sm-block">
           <SalesValueWidget
             title="Sales Value"
@@ -82,7 +85,7 @@ export default () => {
             percentage={10.57}
           />
         </Col>
-
+       
       </Row>
 
       <Row>

@@ -25,7 +25,7 @@ export default () => {
       </div>
 
       <PageTrafficTable />
-      <RankingTable />
+      
     </>
   );
 };

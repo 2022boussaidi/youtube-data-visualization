@@ -103,7 +103,7 @@ export default (props = {}) => {
               <Dropdown.Divider className="my-3 border-indigo" />
               <NavItem title="Main Visualization " icon={faCog} link={Routes.Settings.path} />
               <Dropdown.Divider className="my-3 border-indigo" />
-              <NavItem title="Comment List" icon={faHandHoldingUsd} link={Routes.Transactions.path} />
+              <NavItem title="Comment List" icon={faHandHoldingUsd} link={Routes.Comments.path} />
               <Dropdown.Divider className="my-3 border-indigo" />
 
               <CollapsableNavItem eventKey="tables/" title="Word Cloud Section" icon={faTable}>

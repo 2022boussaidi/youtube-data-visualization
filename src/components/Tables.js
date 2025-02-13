@@ -1,14 +1,16 @@
 
-import React from "react";
+import React , { useEffect, useState }from "react";
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleDown, faAngleUp, faArrowDown, faArrowUp, faEdit, faEllipsisH, faExternalLinkAlt, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Col, Row, Nav, Card, Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
+import { Col, Row, Nav, Card,Form, InputGroup,  Image, Button, Table, Dropdown, ProgressBar, Pagination, ButtonGroup } from '@themesberg/react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { Routes } from "../routes";
 import { pageVisits, pageTraffic, pageRanking } from "../data/tables";
 import transactions from "../data/transactions";
 import commands from "../data/commands";
+import axios from "axios";
 
 const ValueChange = ({ value, suffix }) => {
   const valueIcon = value < 0 ? faAngleDown : faAngleUp;
@@ -71,35 +73,67 @@ export const PageVisitsTable = () => {
     </Card>
   );
 };
-
+/////// this is where i put the comments visualization { using axios to fetch comments data }///////////
 export const PageTrafficTable = () => {
+  const [comments, setComments] = useState([]);
+  const [videoId, setVideoId] = useState(""); // State to store the video ID
+  const [loading, setLoading] = useState(false); // State to handle loading state
+  const [currentPage, setCurrentPage] = useState(1); // State to track the current page
+  const [commentsPerPage] = useState(10); // Number of comments per page
+
+  // Function to fetch comments
+  const fetchComments = async () => {
+    if (!videoId) {
+      alert("Please enter a video ID");
+      return;
+    }
+
+    setLoading(true); // Start loading
+    try {
+      const response = await axios.get(`http://localhost:5000/get_comments?video_id=${videoId}`);
+      const data = response.data;
+      if (data.comments) {
+        const parsedComments = JSON.parse(data.comments);
+        setComments(parsedComments);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      alert("Failed to fetch comments. Please check the video ID and try again.");
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
+
+  // Get current comments for pagination
+  const indexOfLastComment = currentPage * commentsPerPage;
+  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
+  const currentComments = comments.slice(indexOfFirstComment, indexOfLastComment);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const TableRow = (props) => {
-    const { id, source, sourceIcon, sourceIconColor, sourceType, category, rank, trafficShare, change } = props;
+    const { user_name, comment, date, replies } = props;
 
     return (
       <tr>
         <td>
-          <Card.Link href="#" className="text-primary fw-bold">{id}</Card.Link>
+          <Card.Link href="#" className="text-primary fw-bold">{user_name}</Card.Link>
         </td>
         <td className="fw-bold">
-          <FontAwesomeIcon icon={sourceIcon} className={`icon icon-xs text-${sourceIconColor} w-30`} />
-          {source}
+          {comment}
         </td>
-        <td>{sourceType}</td>
-        <td>{category ? category : "--"}</td>
-        <td>{rank ? rank : "--"}</td>
+        <td>{new Date(date).toLocaleString()}</td>
         <td>
-          <Row className="d-flex align-items-center">
-            <Col xs={12} xl={2} className="px-0">
-              <small className="fw-bold">{trafficShare}%</small>
-            </Col>
-            <Col xs={12} xl={10} className="px-0 px-xl-1">
-              <ProgressBar variant="primary" className="progress-lg mb-0" now={trafficShare} min={0} max={100} />
-            </Col>
-          </Row>
-        </td>
-        <td>
-          <ValueChange value={change} suffix="%" />
+          {replies.length > 0 ? (
+            <div>
+              {replies.map((reply, index) => (
+                <div key={index} className="text-muted">{reply}</div>
+              ))}
+            </div>
+          ) : (
+            <span className="text-muted">No replies</span>
+          )}
         </td>
       </tr>
     );
@@ -108,27 +142,90 @@ export const PageTrafficTable = () => {
   return (
     <Card border="light" className="shadow-sm mb-4">
       <Card.Body className="pb-0">
+        {/* Input for Video ID */}
+        <Row className="mb-4">
+          <Col>
+            <Form.Group>
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter Video ID"
+                  value={videoId}
+                  onChange={(e) => setVideoId(e.target.value)}
+                />
+                <Button variant="primary" onClick={fetchComments} disabled={loading}>
+                  {loading ? "Fetching..." : "Fetch Comments"}
+                </Button>
+              </InputGroup>
+            </Form.Group>
+          </Col>
+        </Row>
+
+        {/* Table to display comments */}
         <Table responsive className="table-centered table-nowrap rounded mb-0">
           <thead className="thead-light">
             <tr>
-              <th className="border-0">#</th>
-              <th className="border-0">Traffic Source</th>
-              <th className="border-0">Source Type</th>
-              <th className="border-0">Category</th>
-              <th className="border-0">Global Rank</th>
-              <th className="border-0">Traffic Share</th>
-              <th className="border-0">Change</th>
+              <th className="border-0">User</th>
+              <th className="border-0">Comment</th>
+              <th className="border-0">Date</th>
+              <th className="border-0">Replies</th>
             </tr>
           </thead>
           <tbody>
-            {pageTraffic.map(pt => <TableRow key={`page-traffic-${pt.id}`} {...pt} />)}
+            {currentComments.length > 0 ? (
+              currentComments.map((comment, index) => (
+                <TableRow
+                  key={index}
+                  user_name={comment.user_name}
+                  comment={comment.comment}
+                  date={comment.date}
+                  replies={comment.replies}
+                />
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  No comments found. Enter a video ID and click "Fetch Comments".
+                </td>
+              </tr>
+            )}
           </tbody>
         </Table>
+
+        {/* Pagination */}
+        {comments.length > commentsPerPage && (
+          <Row className="mt-3">
+            <Col className="d-flex justify-content-center">
+              <Pagination>
+                <Pagination.Prev
+                  onClick={() => setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))}
+                  disabled={currentPage === 1}
+                />
+                {[...Array(Math.ceil(comments.length / commentsPerPage)).keys()].map((number) => (
+                  <Pagination.Item
+                    key={number + 1}
+                    active={number + 1 === currentPage}
+                    onClick={() => paginate(number + 1)}
+                  >
+                    {number + 1}
+                  </Pagination.Item>
+                ))}
+                <Pagination.Next
+                  onClick={() =>
+                    setCurrentPage((prev) =>
+                      prev < Math.ceil(comments.length / commentsPerPage) ? prev + 1 : prev
+                    )
+                  }
+                  disabled={currentPage === Math.ceil(comments.length / commentsPerPage)}
+                />
+              </Pagination>
+            </Col>
+          </Row>
+        )}
       </Card.Body>
     </Card>
   );
 };
-
 export const RankingTable = () => {
   const TableRow = (props) => {
     const { country, countryImage, overallRank, overallRankChange, travelRank, travelRankChange, widgetsRank, widgetsRankChange } = props;
